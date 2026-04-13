@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>QR Médico</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f4f6f9;
+  text-align: center;
+}
+
+.container {
+  background: white;
+  padding: 20px;
+  margin: 40px auto;
+  width: 300px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+input, textarea {
+  width: 90%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: #007BFF;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  width: 100%;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+#qr {
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Registro Médico</h2>
+
+<form id="form">
+<input type="text" id="nombre" placeholder="Nombre" required>
+<input type="number" id="edad" placeholder="Edad">
+<input type="text" id="sangre" placeholder="Tipo de sangre">
+<textarea id="enfermedades" placeholder="Enfermedades"></textarea>
+<textarea id="medicamentos" placeholder="Medicamentos"></textarea>
+<textarea id="alergias" placeholder="Alergias"></textarea>
+<input type="text" id="contacto" placeholder="Contacto de emergencia">
+<textarea id="notas" placeholder="Notas adicionales"></textarea>
+
+<button type="submit">Generar QR</button>
+</form>
+
+<canvas id="qr"></canvas><br><br>
+<a id="descargar">Descargar QR</a>
+
+</div>
+
+<script>
+document.getElementById("form").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const data = {
+    nombre: nombre.value,
+    edad: edad.value,
+    sangre: sangre.value,
+    enfermedades: enfermedades.value,
+    medicamentos: medicamentos.value,
+    alergias: alergias.value,
+    contacto: contacto.value,
+    notas: notas.value
+  };
+
+  const id = "user_" + Date.now();
+  localStorage.setItem(id, JSON.stringify(data));
+
+  const url = window.location.href.replace("index.html", "") + "perfil.html?id=" + id;
+
+  QRCode.toCanvas(document.getElementById("qr"), url);
+
+  setTimeout(() => {
+    descargar.href = qr.toDataURL();
+    descargar.download = "qr_medico.png";
+  }, 500);
+});
+</script>
+
+</body>
+</html>
